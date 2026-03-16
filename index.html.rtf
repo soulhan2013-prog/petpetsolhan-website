@@ -1,0 +1,544 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2865
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0  <!DOCTYPE html>\
+<html lang="en">\
+<head>\
+    <meta charset="UTF-8">\
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
+    <title>PetPet GIF Generator - Solhan Jin</title>\
+    <style>\
+        * \{\
+            margin: 0;\
+            padding: 0;\
+            box-sizing: border-box;\
+        \}\
+\
+        body \{\
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;\
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\
+            min-height: 100vh;\
+            display: flex;\
+            align-items: center;\
+            justify-content: center;\
+            padding: 20px;\
+        \}\
+\
+        .container \{\
+            background: white;\
+            border-radius: 20px;\
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);\
+            max-width: 1200px;\
+            width: 100%;\
+            padding: 40px;\
+        \}\
+\
+        header \{\
+            text-align: center;\
+            margin-bottom: 40px;\
+        \}\
+\
+        h1 \{\
+            font-size: 2.5rem;\
+            color: #333;\
+            margin-bottom: 10px;\
+        \}\
+\
+        .subtitle \{\
+            color: #666;\
+            font-size: 1.1rem;\
+        \}\
+\
+        /* Upload Section */\
+        .upload-section \{\
+            margin-bottom: 40px;\
+        \}\
+\
+        .upload-box \{\
+            border: 3px dashed #ccc;\
+            border-radius: 12px;\
+            padding: 40px;\
+            text-align: center;\
+            background: #f9f9f9;\
+            transition: all 0.3s ease;\
+            cursor: pointer;\
+        \}\
+\
+        .upload-box.drag-over \{\
+            border-color: #667eea;\
+            background: #f0f3ff;\
+        \}\
+\
+        .upload-icon \{\
+            font-size: 48px;\
+            margin-bottom: 15px;\
+        \}\
+\
+        .or-text \{\
+            color: #999;\
+            margin: 15px 0;\
+        \}\
+\
+        .upload-btn \{\
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\
+            color: white;\
+            padding: 12px 30px;\
+            border-radius: 25px;\
+            border: none;\
+            font-size: 1rem;\
+            cursor: pointer;\
+            display: inline-block;\
+            transition: transform 0.2s;\
+        \}\
+\
+        .upload-btn:hover \{\
+            transform: scale(1.05);\
+        \}\
+\
+        .file-name \{\
+            margin-top: 15px;\
+            color: #667eea;\
+            font-weight: 500;\
+        \}\
+\
+        /* Preview Section */\
+        .preview-section \{\
+            display: flex;\
+            align-items: center;\
+            justify-content: center;\
+            gap: 30px;\
+            margin-bottom: 40px;\
+            flex-wrap: wrap;\
+        \}\
+\
+        .preview-box \{\
+            flex: 1;\
+            min-width: 250px;\
+            text-align: center;\
+        \}\
+\
+        .preview-box h3 \{\
+            margin-bottom: 15px;\
+            color: #333;\
+        \}\
+\
+        .image-container \{\
+            background: #f5f5f5;\
+            border-radius: 12px;\
+            padding: 20px;\
+            min-height: 250px;\
+            display: flex;\
+            align-items: center;\
+            justify-content: center;\
+            border: 2px solid #eee;\
+        \}\
+\
+        .image-container img \{\
+            max-width: 100%;\
+            max-height: 250px;\
+            border-radius: 8px;\
+            display: none;\
+        \}\
+\
+        .placeholder \{\
+            color: #999;\
+            font-style: italic;\
+        \}\
+\
+        .arrow \{\
+            font-size: 40px;\
+            color: #667eea;\
+        \}\
+\
+        /* Action Section */\
+        .action-section \{\
+            text-align: center;\
+            margin-bottom: 20px;\
+        \}\
+\
+        .generate-btn, .download-btn \{\
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\
+            color: white;\
+            padding: 15px 40px;\
+            border: none;\
+            border-radius: 30px;\
+            font-size: 1.1rem;\
+            font-weight: 600;\
+            cursor: pointer;\
+            transition: transform 0.2s, opacity 0.2s;\
+            margin: 0 10px;\
+        \}\
+\
+        .generate-btn:hover:not(:disabled) \{\
+            transform: scale(1.05);\
+        \}\
+\
+        .generate-btn:disabled \{\
+            opacity: 0.5;\
+            cursor: not-allowed;\
+        \}\
+\
+        .download-btn \{\
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);\
+        \}\
+\
+        .loader \{\
+            display: inline-block;\
+            width: 20px;\
+            height: 20px;\
+            border: 3px solid #f3f3f3;\
+            border-top: 3px solid #667eea;\
+            border-radius: 50%;\
+            animation: spin 1s linear infinite;\
+            margin-left: 10px;\
+        \}\
+\
+        @keyframes spin \{\
+            0% \{ transform: rotate(0deg); \}\
+            100% \{ transform: rotate(360deg); \}\
+        \}\
+\
+        /* Error Message */\
+        .error-message \{\
+            background: #fee;\
+            border: 1px solid #fcc;\
+            border-radius: 8px;\
+            padding: 15px;\
+            margin-top: 20px;\
+            display: flex;\
+            align-items: center;\
+            gap: 10px;\
+            color: #c33;\
+        \}\
+\
+        .error-icon \{\
+            font-size: 20px;\
+        \}\
+\
+        /* Footer */\
+        footer \{\
+            text-align: center;\
+            margin-top: 40px;\
+            color: #999;\
+        \}\
+\
+        footer a \{\
+            color: #667eea;\
+            text-decoration: none;\
+        \}\
+\
+        /* Responsive Design */\
+        @media (max-width: 768px) \{\
+            .container \{\
+                padding: 20px;\
+            \}\
+\
+            h1 \{\
+                font-size: 2rem;\
+            \}\
+\
+            .preview-section \{\
+                flex-direction: column;\
+            \}\
+\
+            .arrow \{\
+                transform: rotate(90deg);\
+            \}\
+        \}\
+    </style>\
+</head>\
+<body>\
+    <div class="container">\
+        <header>\
+            <h1>\uc0\u55357 \u56382  PETPET GIF Generator \u55357 \u56382 </h1>\
+            <p class="subtitle">Turn any image into an adorable petting animation!</p>\
+        </header>\
+\
+        <main>\
+            <div class="upload-section">\
+                <div class="upload-box" id="dropZone">\
+                    <div class="upload-icon">\uc0\u55357 \u56548 </div>\
+                    <p>Drag & drop an image here</p>\
+                    <p class="or-text">- or -</p>\
+                    <label for="fileInput" class="upload-btn">Choose File</label>\
+                    <input type="file" id="fileInput" accept="image/*" hidden>\
+                    <p class="file-name" id="fileName"></p>\
+                </div>\
+            </div>\
+\
+            <div class="preview-section">\
+                <div class="preview-box">\
+                    <h3>Original Image</h3>\
+                    <div class="image-container" id="originalContainer">\
+                        <img id="originalImage" src="" alt="Original image">\
+                        <span class="placeholder">Your image will appear here</span>\
+                    </div>\
+                </div>\
+\
+                <div class="arrow">\uc0\u10145 \u65039 </div>\
+\
+                <div class="preview-box">\
+                    <h3>PetPet GIF</h3>\
+                    <div class="image-container" id="outputContainer">\
+                        <img id="outputImage" src="" alt="PetPet GIF">\
+                        <span class="placeholder">Generated GIF will appear here</span>\
+                    </div>\
+                </div>\
+            </div>\
+\
+            <div class="action-section">\
+                <button class="generate-btn" id="generateBtn" disabled>\
+                    Generate PetPet GIF\
+                </button>\
+                \
+                <button class="download-btn" id="downloadBtn" style="display: none;">\
+                    \uc0\u11015 \u65039  Download GIF\
+                </button>\
+            </div>\
+\
+            <div class="error-message" id="errorMessage" style="display: none;">\
+                <span class="error-icon">\uc0\u9888 \u65039 </span>\
+                <span class="error-text"></span>\
+            </div>\
+        </main>\
+\
+        <footer>\
+            <p>Made with \uc0\u10084 \u65039  by Solhan Jin | Inspired by <a href="https://benisland.neocities.org/petpet/" target="_blank">benisland</a></p>\
+        </footer>\
+    </div>\
+\
+    <script>\
+        // DOM Elements\
+        const dropZone = document.getElementById('dropZone');\
+        const fileInput = document.getElementById('fileInput');\
+        const fileName = document.getElementById('fileName');\
+        const originalImage = document.getElementById('originalImage');\
+        const originalContainer = document.getElementById('originalContainer');\
+        const outputImage = document.getElementById('outputImage');\
+        const outputContainer = document.getElementById('outputContainer');\
+        const generateBtn = document.getElementById('generateBtn');\
+        const downloadBtn = document.getElementById('downloadBtn');\
+        const errorMessage = document.getElementById('errorMessage');\
+        const errorText = document.querySelector('.error-text');\
+\
+        let selectedFile = null;\
+        let generatedGifUrl = null;\
+\
+        // PetPet GIF Generation Function (Client-side simulation)\
+        function generatePetPetGif(imageFile) \{\
+            return new Promise((resolve, reject) => \{\
+                const reader = new FileReader();\
+                \
+                reader.onload = (e) => \{\
+                    const img = new Image();\
+                    img.onload = () => \{\
+                        // Create canvas for image processing\
+                        const canvas = document.createElement('canvas');\
+                        const ctx = canvas.getContext('2d');\
+                        \
+                        // Set canvas size to match image\
+                        canvas.width = img.width;\
+                        canvas.height = img.height;\
+                        \
+                        // Draw original image\
+                        ctx.drawImage(img, 0, 0);\
+                        \
+                        // Create a simple animation effect (simulating petpet)\
+                        // This creates a simple bouncing/patting effect\
+                        const frames = [];\
+                        const numFrames = 10;\
+                        \
+                        for (let i = 0; i < numFrames; i++) \{\
+                            const frameCanvas = document.createElement('canvas');\
+                            frameCanvas.width = img.width;\
+                            frameCanvas.height = img.height;\
+                            const frameCtx = frameCanvas.getContext('2d');\
+                            \
+                            // Calculate transformation for this frame\
+                            const scale = 1 + (Math.sin(i / numFrames * Math.PI * 2) * 0.1);\
+                            const xOffset = Math.sin(i / numFrames * Math.PI * 2) * 5;\
+                            const yOffset = Math.cos(i / numFrames * Math.PI * 2) * 5;\
+                            \
+                            // Clear frame\
+                            frameCtx.clearRect(0, 0, frameCanvas.width, frameCanvas.height);\
+                            \
+                            // Draw image with transformation\
+                            frameCtx.save();\
+                            frameCtx.translate(frameCanvas.width / 2 + xOffset, frameCanvas.height / 2 + yOffset);\
+                            frameCtx.scale(scale, scale);\
+                            frameCtx.drawImage(img, -img.width / 2, -img.height / 2);\
+                            frameCtx.restore();\
+                            \
+                            frames.push(frameCanvas);\
+                        \}\
+                        \
+                        // Combine frames into GIF using gif.js (we'll use a simpler approach)\
+                        // For demonstration, we'll create an animated GIF using multiple frames\
+                        const gif = new GIF(\{\
+                            workers: 2,\
+                            quality: 10,\
+                            width: img.width,\
+                            height: img.height\
+                        \});\
+                        \
+                        // Add frames\
+                        frames.forEach(frame => \{\
+                            gif.addFrame(frame, \{delay: 100\});\
+                        \});\
+                        \
+                        gif.on('finished', (blob) => \{\
+                            const url = URL.createObjectURL(blob);\
+                            resolve(url);\
+                        \});\
+                        \
+                        gif.render();\
+                    \};\
+                    img.src = e.target.result;\
+                \};\
+                \
+                reader.onerror = reject;\
+                reader.readAsDataURL(imageFile);\
+            \});\
+        \}\
+\
+        // Load gif.js library dynamically\
+        function loadGifJs() \{\
+            return new Promise((resolve, reject) => \{\
+                if (window.GIF) \{\
+                    resolve();\
+                    return;\
+                \}\
+                \
+                const script = document.createElement('script');\
+                script.src = 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js';\
+                script.onload = resolve;\
+                script.onerror = reject;\
+                document.head.appendChild(script);\
+            \});\
+        \}\
+\
+        // Drag and drop handlers\
+        dropZone.addEventListener('dragover', (e) => \{\
+            e.preventDefault();\
+            dropZone.classList.add('drag-over');\
+        \});\
+\
+        dropZone.addEventListener('dragleave', () => \{\
+            dropZone.classList.remove('drag-over');\
+        \});\
+\
+        dropZone.addEventListener('drop', (e) => \{\
+            e.preventDefault();\
+            dropZone.classList.remove('drag-over');\
+            const files = e.dataTransfer.files;\
+            if (files.length > 0) \{\
+                handleFile(files[0]);\
+            \}\
+        \});\
+\
+        // File input handler\
+        fileInput.addEventListener('change', (e) => \{\
+            if (e.target.files.length > 0) \{\
+                handleFile(e.target.files[0]);\
+            \}\
+        \});\
+\
+        function handleFile(file) \{\
+            if (!file.type.startsWith('image/')) \{\
+                showError('Please select an image file (PNG, JPG, GIF, or WebP)');\
+                return;\
+            \}\
+\
+            selectedFile = file;\
+            fileName.textContent = file.name;\
+\
+            // Show preview\
+            const reader = new FileReader();\
+            reader.onload = (e) => \{\
+                originalImage.src = e.target.result;\
+                originalImage.style.display = 'block';\
+                originalContainer.querySelector('.placeholder').style.display = 'none';\
+                generateBtn.disabled = false;\
+            \};\
+            reader.readAsDataURL(file);\
+\
+            // Reset output\
+            outputImage.src = '';\
+            outputImage.style.display = 'none';\
+            outputContainer.querySelector('.placeholder').style.display = 'block';\
+            downloadBtn.style.display = 'none';\
+            hideError();\
+            \
+            // Clean up old URL if exists\
+            if (generatedGifUrl) \{\
+                URL.revokeObjectURL(generatedGifUrl);\
+                generatedGifUrl = null;\
+            \}\
+        \}\
+\
+        // Generate button handler\
+        generateBtn.addEventListener('click', async () => \{\
+            if (!selectedFile) return;\
+\
+            generateBtn.disabled = true;\
+            generateBtn.textContent = 'Generating...';\
+            hideError();\
+\
+            try \{\
+                // Load gif.js if not already loaded\
+                await loadGifJs();\
+                \
+                // Generate GIF\
+                const gifUrl = await generatePetPetGif(selectedFile);\
+                \
+                // Display the generated GIF\
+                outputImage.src = gifUrl;\
+                outputImage.style.display = 'block';\
+                outputContainer.querySelector('.placeholder').style.display = 'none';\
+                downloadBtn.style.display = 'inline-block';\
+                \
+                // Store URL for download\
+                generatedGifUrl = gifUrl;\
+                \
+                // Set up download\
+                downloadBtn.onclick = () => \{\
+                    const link = document.createElement('a');\
+                    link.href = gifUrl;\
+                    link.download = 'petpet.gif';\
+                    link.click();\
+                \};\
+                \
+            \} catch (error) \{\
+                showError('Failed to generate GIF. Please try again.');\
+                console.error('Generation error:', error);\
+            \} finally \{\
+                generateBtn.disabled = false;\
+                generateBtn.textContent = 'Generate PetPet GIF';\
+            \}\
+        \});\
+\
+        function showError(message) \{\
+            errorMessage.style.display = 'flex';\
+            errorText.textContent = message;\
+        \}\
+\
+        function hideError() \{\
+            errorMessage.style.display = 'none';\
+        \}\
+\
+        // Clean up on page unload\
+        window.addEventListener('beforeunload', () => \{\
+            if (generatedGifUrl) \{\
+                URL.revokeObjectURL(generatedGifUrl);\
+            \}\
+        \});\
+    </script>\
+    \
+    <!-- Add gif.js library -->\
+    <script src="https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.js"></script>\
+</body>\
+</html>}
